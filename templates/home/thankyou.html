@@ -1,0 +1,19 @@
+{% extends 'base.html'%}
+{% load static%}
+{% block title %}
+    Z-Store
+{% endblock %}
+
+{% block content %}
+    <div class="text-center">
+        <br>
+        <br>
+        <h1 class="product_title text-center">
+            Thanks for placing your oder !
+        </h1>
+        <br><br>
+        <p>Your Product ID is : <b>{{ customer_order.id }}</b></p>
+        <br>
+        <p>We have received your order ! </p>
+    </div>
+{% endblock %}
