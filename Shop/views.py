@@ -2,6 +2,7 @@ from django.shortcuts import render,get_object_or_404,redirect
 from .models import Category,Product,Cart ,CartItem ,OrderItem,Order
 from django.core.exceptions import ObjectDoesNotExist
 import stripe
+from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate,login,logout
@@ -214,3 +215,25 @@ def signInView(request):
 def signoutView(request):
     logout(request)
     return redirect('signin')
+
+@login_required(redirect_field_name='next', login_url='signin')
+def orderHistory(request):
+    if request.user.is_authenticated:
+        email = str(request.user.email)
+        order_details = Order.objects.filter(emailAddress=email)
+        print(email)
+        print(order_details)
+    return render(request, 'home/orders_list.html', {'order_details': order_details})
+
+
+@login_required(redirect_field_name='next', login_url='signin')
+def viewOrder(request, order_id):
+    if request.user.is_authenticated:
+        email = str(request.user.email)
+        order = Order.objects.get(id=order_id, emailAddress=email)
+        order_items = OrderItem.objects.filter(order=order)
+    return render(request, 'home/order_detail.html', {'order': order, 'order_items': order_items})
+
+def search(request):
+    products = Product.objects.filter(name__contains=request.GET['title'])
+    return render(request, 'home/home.html', {'products': products})

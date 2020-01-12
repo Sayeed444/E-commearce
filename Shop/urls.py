@@ -12,5 +12,8 @@ urlpatterns = [
     path('account/created/',views.signUpView,name = 'signup'),
     path('account/signin/',views.signInView,name = 'signin'),
     path('account/logout/',views.signoutView,name = 'signout'),
+    path('order-history/',views.orderHistory,name = 'order_history'),
+    path('order/<int:order_id>', views.viewOrder, name='order_detail'),
+    path('search/', views.search, name='search'),
 
 ]
