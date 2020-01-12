@@ -3,6 +3,10 @@ from .models import Category,Product,Cart ,CartItem ,OrderItem,Order
 from django.core.exceptions import ObjectDoesNotExist
 import stripe
 from django.conf import settings
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate,login,logout
+from .forms import SignUpForm
+
 # Create your views here.
 
 def home(request,category_slug = None):
@@ -168,3 +172,45 @@ def thanks_page(request,order_id):
     if order_id:
         customer_order = get_object_or_404(Order,id = order_id)
     return render(request,'home/thankyou.html',{'customer_order':customer_order})
+
+
+def signUpView(request):
+    if request.method == "POST":
+        form =SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            user = authenticate(request, username=username, password=password)
+            login(request,user)
+            return redirect('home')
+
+    else:
+        form = SignUpForm()
+    context = {
+        'form':form,
+    }
+    return render(request,'auth/signup.html',context)
+
+def signInView(request):
+    if request.method == 'POST':
+        form =AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            username = request.POST['username']
+            password = request.POST['password']
+            user =authenticate(username=username,password=password)
+            if user is not None:
+                login(request,user)
+                return redirect('home')
+            else:
+                return redirect('signup')
+    else:
+        form = AuthenticationForm()
+    context = {
+        'form':form,
+    }
+    return render(request,'auth/signin.html',context)
+
+def signoutView(request):
+    logout(request)
+    return redirect('signin')

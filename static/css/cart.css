@@ -21,9 +21,17 @@
   background-color: #868e96 !important;
   margin-bottom: 5px;
 }
+.errorlist li {
+  color: red;
+  font-weight: bold;
+}
 
 .stripe-button-el span {
   height: 36px !important;
   font-family: 'Roboto', sans-serif !important;
   font-size: 16px !important;
+}
+
+.custom_div{
+  margin-bottom: 20px !important;
 }
